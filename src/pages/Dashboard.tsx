@@ -1,28 +1,84 @@
-import type React from "react"
-import { useQuery } from "@tanstack/react-query"
-import { Link } from "react-router-dom"
-import { Cloud, Leaf, Building, TrendingUp, AlertTriangle, Activity } from "lucide-react"
-import { dashboardAPI } from "../services/api"
-import MetricCard from "../components/MetricCard"
-import RecentAlerts from "../components/RecentAlerts"
+import type React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
+import {
+  Cloud,
+  Leaf,
+  Building,
+  TrendingUp,
+  AlertTriangle,
+  Activity,
+} from "lucide-react";
+import { dashboardAPI } from "../services/api";
+import MetricCard from "../components/MetricCard";
+import RecentAlerts from "../components/RecentAlerts";
 
 const Dashboard: React.FC = () => {
-  const { data: metrics, isLoading } = useQuery({
+  // Mock metrics data since backend is not available
+  const mockMetrics = {
+    temperatureAnomaly: 1.2,
+    temperatureChange: 0.3,
+    co2Concentration: 421,
+    co2Change: 0.8,
+    riskScore: 7.4,
+    riskChange: -0.2,
+    activeWeatherAlerts: 12,
+    companiesAnalyzed: 247,
+    planningProjects: 8,
+  };
+
+  const { data: metrics = mockMetrics, isLoading } = useQuery({
     queryKey: ["dashboard-metrics"],
     queryFn: dashboardAPI.getMetrics,
-  })
+    initialData: mockMetrics,
+    retry: false, // Don't retry failed requests
+    refetchOnWindowFocus: false, // Don't refetch on window focus
+  });
 
-  const { data: alerts } = useQuery({
-    queryKey: ["recent-alerts"],
-    queryFn: dashboardAPI.getRecentAlerts,
-  })
+  // Mock alerts data since backend is not available
+  const mockAlerts = [
+    {
+      id: "1",
+      type: "hurricane" as const,
+      severity: "high" as const,
+      location: "Miami, FL",
+      message:
+        "Category 3 hurricane approaching with sustained winds of 120 mph",
+      timestamp: "2024-01-27 10:30 AM",
+    },
+    {
+      id: "2",
+      type: "heatwave" as const,
+      severity: "critical" as const,
+      location: "Phoenix, AZ",
+      message:
+        "Extreme heat warning - temperatures exceeding 115°F for 5+ days",
+      timestamp: "2024-01-27 09:15 AM",
+    },
+    {
+      id: "3",
+      type: "wildfire" as const,
+      severity: "medium" as const,
+      location: "Los Angeles, CA",
+      message: "Wildfire risk elevated due to dry conditions and high winds",
+      timestamp: "2024-01-27 08:45 AM",
+    },
+    {
+      id: "4",
+      type: "flood" as const,
+      severity: "low" as const,
+      location: "Houston, TX",
+      message: "Potential flooding from heavy rainfall expected this weekend",
+      timestamp: "2024-01-27 07:20 AM",
+    },
+  ];
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
-    )
+    );
   }
 
   const moduleCards = [
@@ -50,13 +106,17 @@ const Dashboard: React.FC = () => {
       color: "bg-orange-500",
       stats: `${metrics?.planningProjects || 0} active projects`,
     },
-  ]
+  ];
 
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Climate Analysis Dashboard</h1>
-        <p className="mt-2 text-gray-600">Comprehensive climate intelligence powered by AI</p>
+        <h1 className="text-3xl font-bold text-gray-900">
+          Climate Analysis Dashboard
+        </h1>
+        <p className="mt-2 text-gray-600">
+          Comprehensive climate intelligence powered by AI
+        </p>
       </div>
 
       {/* Key Metrics */}
@@ -87,7 +147,7 @@ const Dashboard: React.FC = () => {
       {/* Module Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {moduleCards.map((module) => {
-          const Icon = module.icon
+          const Icon = module.icon;
           return (
             <Link
               key={module.title}
@@ -102,27 +162,32 @@ const Dashboard: React.FC = () => {
                   <h3 className="text-lg font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
                     {module.title}
                   </h3>
-                  <p className="text-sm text-gray-600 mt-1">{module.description}</p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {module.description}
+                  </p>
                   <p className="text-xs text-gray-500 mt-2">{module.stats}</p>
                 </div>
               </div>
             </Link>
-          )
+          );
         })}
       </div>
 
       {/* Recent Alerts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <RecentAlerts alerts={alerts || []} />
+        <RecentAlerts alerts={mockAlerts} />
 
         <div className="card">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">AI Analysis Summary</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            AI Analysis Summary
+          </h3>
           <div className="space-y-3">
             <div className="flex items-start space-x-3">
               <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
               <div>
                 <p className="text-sm text-gray-700">
-                  <strong>Weather AI:</strong> Detected increased hurricane activity in Atlantic basin
+                  <strong>Weather AI:</strong> Detected increased hurricane
+                  activity in Atlantic basin
                 </p>
               </div>
             </div>
@@ -130,7 +195,8 @@ const Dashboard: React.FC = () => {
               <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
               <div>
                 <p className="text-sm text-gray-700">
-                  <strong>Carbon AI:</strong> Identified 15% reduction opportunity in manufacturing sector
+                  <strong>Carbon AI:</strong> Identified 15% reduction
+                  opportunity in manufacturing sector
                 </p>
               </div>
             </div>
@@ -138,7 +204,8 @@ const Dashboard: React.FC = () => {
               <div className="w-2 h-2 bg-orange-500 rounded-full mt-2"></div>
               <div>
                 <p className="text-sm text-gray-700">
-                  <strong>Urban AI:</strong> Recommended green infrastructure for 3 cities
+                  <strong>Urban AI:</strong> Recommended green infrastructure
+                  for 3 cities
                 </p>
               </div>
             </div>
@@ -146,7 +213,7 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;

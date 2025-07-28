@@ -52,7 +52,7 @@ redis==5.0.1
 
 # Security & Authentication
 bcrypt==4.1.2
-cryptography==41.0.8
+cryptography>=42.0.0
 PyJWT==2.8.0
 
 # Development & Testing

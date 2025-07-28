@@ -1,12 +1,12 @@
-import { Routes, Route } from "react-router-dom"
-import { AuthProvider } from "./contexts/AuthContext"
-import Layout from "./components/Layout"
-import Dashboard from "./pages/Dashboard"
-import WeatherPrediction from "./pages/WeatherPrediction"
-import CarbonFootprint from "./pages/CarbonFootprint"
-import UrbanPlanning from "./pages/UrbanPlanning"
-import Login from "./pages/Login"
-import ProtectedRoute from "./components/ProtectedRoute"
+import { Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthProvider";
+import Layout from "./components/Layout";
+import Dashboard from "./pages/Dashboard";
+import WeatherPrediction from "./pages/WeatherPrediction";
+import CarbonFootprint from "./pages/CarbonFootprint";
+import UrbanPlanning from "./pages/UrbanPlanning";
+import Login from "./pages/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -49,7 +49,7 @@ function App() {
         </Route>
       </Routes>
     </AuthProvider>
-  )
+  );
 }
 
-export default App
+export default App;
